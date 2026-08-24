@@ -1,0 +1,36 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: api
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/mms-gitops/gitops.git
+    targetRevision: HEAD
+    path: charts/api            # deploys your existing Helm chart
+    helm:
+      parameters:
+        - name: image.repository
+          value: myatminsoe/api
+        - name: image.tag
+          value: "2.0.0"
+        - name: image.pullPolicy
+          value: IfNotPresent
+        - name: ingress.host
+          value: api.local
+        - name: persistence.enabled
+          value: "true"
+        - name: persistence.hostPath
+          value: /var/local-files/api-data
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: default
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=false
