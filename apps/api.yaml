@@ -7,24 +7,29 @@ metadata:
     - resources-finalizer.argocd.argoproj.io
 spec:
   project: default
-  source:
-    repoURL: https://github.com/mms-gitops/gitops.git
-    targetRevision: HEAD
-    path: charts/api            # deploys your existing Helm chart
-    helm:
-      parameters:
-        - name: image.repository
-          value: myatminsoe/api
-        - name: image.tag
-          value: "2.0.0"
-        - name: image.pullPolicy
-          value: IfNotPresent
-        - name: ingress.host
-          value: api.local
-        - name: persistence.enabled
-          value: "true"
-        - name: persistence.hostPath
-          value: /var/local-files/api-data
+  sources:
+    # Chart lives in the helm-charts repo
+    - repoURL: https://github.com/mms-gitops/helm-charts.git
+      path: api
+      targetRevision: HEAD
+      helm:
+        parameters:
+          - name: image.repository
+            value: myatminsoe/api
+          - name: image.tag
+            value: "2.0.0"
+          - name: image.pullPolicy
+            value: IfNotPresent
+          - name: ingress.host
+            value: api.local
+          - name: persistence.enabled
+            value: "true"
+          - name: persistence.hostPath
+            value: /var/local-files/api-data
+    # GitOps repo is available as $values for env-specific config later
+    - repoURL: https://github.com/mms-gitops/gitops.git
+      targetRevision: HEAD
+      ref: values
   destination:
     server: https://kubernetes.default.svc
     namespace: default
@@ -32,5 +37,3 @@ spec:
     automated:
       prune: true
       selfHeal: true
-    syncOptions:
-      - CreateNamespace=false
