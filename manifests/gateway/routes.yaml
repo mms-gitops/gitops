@@ -9,6 +9,7 @@ spec:
       namespace: default
   hostnames:
     - argocd.mms.local
+    - argocd.myatminsoe.com
   rules:
     - backendRefs:
         - name: argocd-server
@@ -25,6 +26,7 @@ spec:
       namespace: default
   hostnames:
     - api.mms.local
+    - music.myatminsoe.com
   rules:
     - matches:
         - path:
@@ -45,6 +47,7 @@ spec:
       namespace: default
   hostnames:
     - grafana.mms.local
+    - grafana.myatminsoe.com
   rules:
     - matches:
         - path:
