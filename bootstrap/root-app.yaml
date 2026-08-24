@@ -10,7 +10,7 @@ spec:
   source:
     repoURL: https://github.com/mms-gitops/gitops.git
     targetRevision: HEAD
-    path: gitops/apps          # every Application manifest in this dir becomes a child app
+    path: apps                # every Application manifest in this dir becomes a child app
   destination:
     server: https://kubernetes.default.svc
     namespace: argocd
